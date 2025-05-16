@@ -62,7 +62,114 @@ var configLsCmd = &cobra.Command{
 	},
 }
 
+var configAddCmd = &cobra.Command{
+	Use:   "add <profile-name>",
+	Short: "Add a new AWS profile",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		profile := args[0]
+		region, _ := cmd.Flags().GetString("region")
+		ssoStartURL, _ := cmd.Flags().GetString("sso-start-url")
+		ssoAccountID, _ := cmd.Flags().GetString("sso-account-id")
+		ssoRoleName, _ := cmd.Flags().GetString("sso-role-name")
+		accessKeyID, _ := cmd.Flags().GetString("access-key-id")
+		secretAccessKey, _ := cmd.Flags().GetString("secret-access-key")
+
+		configPath := filepath.Join(os.Getenv("HOME"), ".aws", "config")
+		credPath := filepath.Join(os.Getenv("HOME"), ".aws", "credentials")
+
+		// Load or create config and credentials files
+		cfg, _ := ini.LooseLoad(configPath)
+		creds, _ := ini.LooseLoad(credPath)
+
+		// Add to config
+		sectionName := "profile " + profile
+		section := cfg.Section(sectionName)
+		if region != "" {
+			section.Key("region").SetValue(region)
+		}
+
+		if ssoStartURL != "" && ssoAccountID != "" && ssoRoleName != "" {
+			section.Key("sso_start_url").SetValue(ssoStartURL)
+			section.Key("sso_account_id").SetValue(ssoAccountID)
+			section.Key("sso_role_name").SetValue(ssoRoleName)
+			section.Key("credential_process").SetValue("") // Clear in case switching from static
+		}
+
+		// Add static credentials if provided
+		if accessKeyID != "" && secretAccessKey != "" {
+			credSection := creds.Section(profile)
+			credSection.Key("aws_access_key_id").SetValue(accessKeyID)
+			credSection.Key("aws_secret_access_key").SetValue(secretAccessKey)
+		}
+
+		if err := cfg.SaveTo(configPath); err != nil {
+			log.Fatalf("failed to write config file: %v", err)
+		}
+		if err := creds.SaveTo(credPath); err != nil {
+			log.Fatalf("failed to write credentials file: %v", err)
+		}
+
+		fmt.Printf("✅ Profile '%s' added successfully.\n", profile)
+	},
+}
+
+var configRemoveCmd = &cobra.Command{
+	Use:   "remove <profile-name>",
+	Short: "Remove an AWS profile from config and credentials",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		profile := args[0]
+		configPath := filepath.Join(os.Getenv("HOME"), ".aws", "config")
+		credPath := filepath.Join(os.Getenv("HOME"), ".aws", "credentials")
+
+		fmt.Printf("⚠️  You are about to erase the AWS profile '%s' from existence.\n", profile)
+		fmt.Print("Are you *absolutely* sure? This action cannot be undone (y/N): ")
+
+		var input string
+		fmt.Scanln(&input)
+		if strings.ToLower(input) != "y" && strings.ToLower(input) != "yes" {
+			fmt.Println("🧼 Crisis averted. Profile is safe... for now.")
+			return
+		}
+
+		cfg, _ := ini.LooseLoad(configPath)
+		creds, _ := ini.LooseLoad(credPath)
+
+		// Remove from config
+		sectionName := "profile " + profile
+		if cfg.HasSection(sectionName) {
+			cfg.DeleteSection(sectionName)
+			fmt.Printf("💀 Deleted profile '%s' from config.\n", profile)
+		}
+
+		// Remove from credentials
+		if creds.HasSection(profile) {
+			creds.DeleteSection(profile)
+			fmt.Printf("🩸 Deleted profile '%s' from credentials.\n", profile)
+		}
+
+		if err := cfg.SaveTo(configPath); err != nil {
+			log.Fatalf("Failed to write config file: %v", err)
+		}
+		if err := creds.SaveTo(credPath); err != nil {
+			log.Fatalf("Failed to write credentials file: %v", err)
+		}
+
+		fmt.Printf("☠️  It's done. '%s' has been removed.\n", profile)
+	},
+}
+
 func init() {
 	configCmd.AddCommand(configLsCmd)
+	configCmd.AddCommand(configAddCmd)
+	configCmd.AddCommand(configRemoveCmd)
 	rootCmd.AddCommand(configCmd)
+
+	configAddCmd.Flags().String("region", "", "AWS region for the profile")
+	configAddCmd.Flags().String("sso-start-url", "", "SSO start URL")
+	configAddCmd.Flags().String("sso-account-id", "", "SSO account ID")
+	configAddCmd.Flags().String("sso-role-name", "", "SSO role name")
+	configAddCmd.Flags().String("access-key-id", "", "AWS access key ID")
+	configAddCmd.Flags().String("secret-access-key", "", "AWS secret access key")
 }
