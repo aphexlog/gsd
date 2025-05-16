@@ -160,10 +160,71 @@ var configRemoveCmd = &cobra.Command{
 	},
 }
 
+var configEditCmd = &cobra.Command{
+	Use:   "edit <profile-name>",
+	Short: "Edit an existing AWS profile",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		profile := args[0]
+		configPath := filepath.Join(os.Getenv("HOME"), ".aws", "config")
+		credPath := filepath.Join(os.Getenv("HOME"), ".aws", "credentials")
+
+		region, _ := cmd.Flags().GetString("region")
+		ssoStartURL, _ := cmd.Flags().GetString("sso-start-url")
+		ssoAccountID, _ := cmd.Flags().GetString("sso-account-id")
+		ssoRoleName, _ := cmd.Flags().GetString("sso-role-name")
+		accessKeyID, _ := cmd.Flags().GetString("access-key-id")
+		secretAccessKey, _ := cmd.Flags().GetString("secret-access-key")
+
+		cfg, _ := ini.LooseLoad(configPath)
+		creds, _ := ini.LooseLoad(credPath)
+
+		sectionName := "profile " + profile
+		if !cfg.HasSection(sectionName) && !creds.HasSection(profile) {
+			fmt.Printf("❌ Profile '%s' not found in config or credentials.\n", profile)
+			return
+		}
+
+		section := cfg.Section(sectionName)
+		if region != "" {
+			section.Key("region").SetValue(region)
+		}
+		if ssoStartURL != "" {
+			section.Key("sso_start_url").SetValue(ssoStartURL)
+		}
+		if ssoAccountID != "" {
+			section.Key("sso_account_id").SetValue(ssoAccountID)
+		}
+		if ssoRoleName != "" {
+			section.Key("sso_role_name").SetValue(ssoRoleName)
+		}
+
+		if accessKeyID != "" || secretAccessKey != "" {
+			credSection := creds.Section(profile)
+			if accessKeyID != "" {
+				credSection.Key("aws_access_key_id").SetValue(accessKeyID)
+			}
+			if secretAccessKey != "" {
+				credSection.Key("aws_secret_access_key").SetValue(secretAccessKey)
+			}
+		}
+
+		if err := cfg.SaveTo(configPath); err != nil {
+			log.Fatalf("Failed to save config file: %v", err)
+		}
+		if err := creds.SaveTo(credPath); err != nil {
+			log.Fatalf("Failed to save credentials file: %v", err)
+		}
+
+		fmt.Printf("🛠️  Profile '%s' updated.\n", profile)
+	},
+}
+
 func init() {
 	configCmd.AddCommand(configLsCmd)
 	configCmd.AddCommand(configAddCmd)
 	configCmd.AddCommand(configRemoveCmd)
+	configCmd.AddCommand(configEditCmd)
 	rootCmd.AddCommand(configCmd)
 
 	configAddCmd.Flags().String("region", "", "AWS region for the profile")
@@ -172,4 +233,11 @@ func init() {
 	configAddCmd.Flags().String("sso-role-name", "", "SSO role name")
 	configAddCmd.Flags().String("access-key-id", "", "AWS access key ID")
 	configAddCmd.Flags().String("secret-access-key", "", "AWS secret access key")
+
+	configEditCmd.Flags().String("region", "", "Update AWS region")
+	configEditCmd.Flags().String("sso-start-url", "", "Update SSO start URL")
+	configEditCmd.Flags().String("sso-account-id", "", "Update SSO account ID")
+	configEditCmd.Flags().String("sso-role-name", "", "Update SSO role name")
+	configEditCmd.Flags().String("access-key-id", "", "Update access key ID")
+	configEditCmd.Flags().String("secret-access-key", "", "Update secret access key")
 }
