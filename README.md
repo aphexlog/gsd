@@ -1,7 +1,6 @@
-
 # GSD CLI
 
-**GSD CLI** (Get Shit Done) is a user-friendly command-line tool designed to simplify authentication and credential management for AWS services. It provides an intuitive interface for managing AWS profiles, authenticating via SSO, and opening the AWS Console or SSO login page, so you can focus on getting things done.
+**GSD CLI** (Get Shit Done) is a user-friendly command-line tool designed to simplify authentication and credential management for AWS services. It provides an intuitive interface for managing AWS profiles, authenticating via SSO, and accessing AWS services, so you can focus on getting things done.
 
 ---
 
@@ -10,7 +9,8 @@
 - **Simplified Authentication**: Authenticate with AWS using SSO or static credentials.
 - **Profile Management**: Easily switch between AWS profiles.
 - **Credential Validation**: Verify the validity of your current credentials.
-- **Quick Access to AWS Console**: Open the AWS Management Console or SSO login page directly from the CLI.
+- **Quick Access to AWS Services**: Open the AWS Management Console, SSO login page, or specific AWS services directly from the CLI.
+- **Configuration Management**: Manage profiles and configurations with intuitive commands.
 - **User-Friendly Commands**: Intuitive commands with clear error messages and helpful output.
 
 ---
@@ -40,41 +40,69 @@
 
 ### Authentication
 
-Authenticate with AWS using the `auth login` command:
+Authenticate with AWS using the `login` command:
 ```bash
-gsd auth login
+gsd login [profile]
 ```
-This command automatically detects your AWS SSO profile or prompts you to authenticate.
+If no profile is specified, the default profile is used. This command automatically detects your AWS SSO profile or prompts you to authenticate.
 
 ### Profile Management
 
-List available AWS profiles:
-```bash
-gsd auth list
-```
-
 Switch to a different profile:
 ```bash
-gsd auth switch <profile-name>
+gsd switch [profile]
 ```
+If no profile is specified, you will be prompted to select one.
 
-### Credential Validation
-
-Validate your current credentials:
-```bash
-gsd auth validate
-```
-
-### Open AWS Console or SSO Login Page
+### Open AWS Services
 
 Open the AWS Management Console for the current account:
 ```bash
-gsd open
+gsd open console
 ```
 
 Open the AWS SSO login page:
 ```bash
-gsd open --sso
+gsd open sso
+```
+
+Open a specific AWS service (e.g., Amplify):
+```bash
+gsd open amplify
+```
+
+Specify a profile when opening a service:
+```bash
+gsd open <service> --profile <profile-name>
+```
+
+### Credential Validation
+
+Check the currently authenticated profile and credentials:
+```bash
+gsd whoami
+```
+
+### Configuration Management
+
+List all configured profiles:
+```bash
+gsd config ls
+```
+
+Add a new profile:
+```bash
+gsd config add <name> [--flags]
+```
+
+Remove an existing profile:
+```bash
+gsd config remove <name>
+```
+
+Edit an existing profile:
+```bash
+gsd config edit <name> [--flags]
 ```
 
 ---
@@ -83,27 +111,51 @@ gsd open --sso
 
 1. **Login**:
    ```bash
-   gsd auth login
+   gsd login my-profile
    ```
    Authenticate using your SSO profile or credentials.
 
 2. **Switch Profile**:
    ```bash
-   gsd auth switch my-profile
+   gsd switch another-profile
    ```
    Switch to a different AWS profile.
 
-3. **Validate Credentials**:
+3. **Open AWS Console**:
    ```bash
-   gsd auth validate
-   ```
-   Ensure your credentials are valid and ready to use.
-
-4. **Open AWS Console**:
-   ```bash
-   gsd open
+   gsd open console
    ```
    Quickly access the AWS Management Console for the current account.
+
+4. **Open a Specific Service**:
+   ```bash
+   gsd open amplify --profile my-profile
+   ```
+   Open the Amplify service using a specific profile.
+
+5. **Check Current Profile**:
+   ```bash
+   gsd whoami
+   ```
+   View the currently authenticated profile and credentials.
+
+6. **Manage Configurations**:
+   - List profiles:
+     ```bash
+     gsd config ls
+     ```
+   - Add a new profile:
+     ```bash
+     gsd config add new-profile --region us-east-1
+     ```
+   - Remove a profile:
+     ```bash
+     gsd config remove old-profile
+     ```
+   - Edit a profile:
+     ```bash
+     gsd config edit my-profile --region us-west-2
+     ```
 
 ---
 
