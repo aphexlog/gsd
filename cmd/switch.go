@@ -1,6 +1,3 @@
-/*
-Copyright © 2025 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -11,24 +8,17 @@ import (
 
 // switchCmd represents the switch command
 var switchCmd = &cobra.Command{
-	Use:   "switch",
-	Short: "Switches the default AWS profile",
-	Long:  `Switches the default AWS profile`,
+	Use:   "switch <profile>",
+	Short: "Switches the current AWS profile by printing an export statement",
+	Long: `Prints an export command to set AWS_PROFILE to the given profile.
+Use it like: eval "$(gsd switch dev)"`,
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("switch called")
+		profile := args[0]
+		fmt.Printf("export AWS_PROFILE=%s\n", profile)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(switchCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// switchCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// switchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
