@@ -17,21 +17,55 @@
 
 ## Installation
 
+### Option 1: Download Binary (Recommended)
+
+Visit the [Releases](https://github.com/yourusername/gsd/releases) page and download the latest version for your platform:
+
+- For macOS:
+  ```bash
+  # For Apple Silicon (M1/M2)
+  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Darwin_arm64.tar.gz
+  tar xzf gsd_Darwin_arm64.tar.gz
+  sudo mv gsd /usr/local/bin/
+
+  # For Intel Macs
+  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Darwin_x86_64.tar.gz
+  tar xzf gsd_Darwin_x86_64.tar.gz
+  sudo mv gsd /usr/local/bin/
+  ```
+
+- For Linux:
+  ```bash
+  # For AMD64
+  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Linux_x86_64.tar.gz
+  tar xzf gsd_Linux_x86_64.tar.gz
+  sudo mv gsd /usr/local/bin/
+
+  # For ARM64
+  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Linux_arm64.tar.gz
+  tar xzf gsd_Linux_arm64.tar.gz
+  sudo mv gsd /usr/local/bin/
+  ```
+
+- For Windows:
+  Download the appropriate ZIP file from the releases page and add it to your PATH.
+
+### Option 2: Build from Source
+
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd gsd-cli
+   cd gsd
    ```
 
 2. Build the CLI:
    ```bash
-   cd src
    go build -o gsd
    ```
 
 3. Add the binary to your PATH (optional):
    ```bash
-   mv gsd /usr/local/bin/
+   sudo mv gsd /usr/local/bin/
    ```
 
 ---
