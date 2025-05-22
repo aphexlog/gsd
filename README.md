@@ -6,12 +6,12 @@
 
 ## Features
 
-- **Simplified Authentication**: Authenticate with AWS using SSO or static credentials.
-- **Profile Management**: Easily switch between AWS profiles.
-- **Credential Validation**: Verify the validity of your current credentials.
-- **Quick Access to AWS Services**: Open the AWS Management Console, SSO login page, or specific AWS services directly from the CLI.
-- **Configuration Management**: Manage profiles and configurations with intuitive commands.
-- **User-Friendly Commands**: Intuitive commands with clear error messages and helpful output.
+- **Interactive Configuration**: User-friendly interactive prompts for managing AWS profiles
+- **Simplified Authentication**: Authenticate with AWS using SSO or static credentials
+- **Profile Management**: Easily switch between AWS profiles
+- **Credential Validation**: Verify the validity of your current credentials
+- **Quick Access to AWS Services**: Open the AWS Management Console, SSO login page, or specific AWS services directly from the CLI
+- **User-Friendly Commands**: Intuitive commands with clear error messages and helpful output
 
 ---
 
@@ -54,6 +54,40 @@ gsd switch [profile]
 ```
 If no profile is specified, you will be prompted to select one.
 
+### Configuration Management
+
+List all configured profiles:
+```bash
+gsd config ls
+```
+
+Add a new profile interactively:
+```bash
+gsd config add
+```
+The CLI will guide you through:
+- Profile name selection
+- AWS region selection
+- Authentication method choice (SSO or Access Keys)
+- Required configuration details
+
+Remove an existing profile:
+```bash
+gsd config remove
+```
+Provides an interactive menu to:
+- Select the profile to remove
+- Confirm deletion
+
+Edit an existing profile:
+```bash
+gsd config edit
+```
+Interactive interface to:
+- Select the profile to edit
+- Choose what to modify (Region, SSO Configuration, or Access Keys)
+- Update the selected configuration
+
 ### Open AWS Services
 
 Open the AWS Management Console for the current account:
@@ -83,55 +117,33 @@ Check the currently authenticated profile and credentials:
 gsd whoami
 ```
 
-### Configuration Management
-
-List all configured profiles:
-```bash
-gsd config ls
-```
-
-Add a new profile:
-```bash
-gsd config add <name> [--flags]
-```
-
-Remove an existing profile:
-```bash
-gsd config remove <name>
-```
-
-Edit an existing profile:
-```bash
-gsd config edit <name> [--flags]
-```
-
 ---
 
 ## Example Workflow
 
-1. **Login**:
+1. **Add a New Profile**:
+   ```bash
+   gsd config add
+   ```
+   Follow the interactive prompts to configure your profile.
+
+2. **Login**:
    ```bash
    gsd login my-profile
    ```
-   Authenticate using your SSO profile or credentials.
+   Authenticate using your configured profile.
 
-2. **Switch Profile**:
+3. **Switch Profile**:
    ```bash
-   gsd switch another-profile
+   gsd switch
    ```
-   Switch to a different AWS profile.
+   Select a different AWS profile from the interactive menu.
 
-3. **Open AWS Console**:
+4. **Open AWS Console**:
    ```bash
    gsd open console
    ```
    Quickly access the AWS Management Console for the current account.
-
-4. **Open a Specific Service**:
-   ```bash
-   gsd open amplify --profile my-profile
-   ```
-   Open the Amplify service using a specific profile.
 
 5. **Check Current Profile**:
    ```bash
@@ -139,31 +151,15 @@ gsd config edit <name> [--flags]
    ```
    View the currently authenticated profile and credentials.
 
-6. **Manage Configurations**:
-   - List profiles:
-     ```bash
-     gsd config ls
-     ```
-   - Add a new profile:
-     ```bash
-     gsd config add new-profile --region us-east-1
-     ```
-   - Remove a profile:
-     ```bash
-     gsd config remove old-profile
-     ```
-   - Edit a profile:
-     ```bash
-     gsd config edit my-profile --region us-west-2
-     ```
-
 ---
 
 ## Roadmap
 
-- Add support for additional AWS services (e.g., S3, EC2).
-- Improve output formatting (e.g., JSON, tables).
-- Integrate secure credential storage.
+- Add support for additional AWS services
+- Improve output formatting (e.g., JSON, tables)
+- Integrate secure credential storage
+- Add profile import/export functionality
+- Enhance interactive configuration options
 
 ---
 
