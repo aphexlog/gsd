@@ -5,7 +5,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/aphexlog/gsd/release.yml)](https://github.com/aphexlog/gsd/actions)
 
-**GSD CLI** (Get Stuff Done) is a user-friendly command-line tool designed to simplify authentication and credential management for AWS services. It provides an intuitive interface for managing AWS profiles, authenticating via SSO, and accessing AWS services, so you can focus on getting things done.
+**GSD CLI** (Get Shit Done) is a user-friendly command-line tool designed to simplify authentication and credential management for AWS services. It provides an intuitive interface for managing AWS profiles, authenticating via SSO, and accessing AWS services, so you can focus on getting things done.
 
 ---
 
