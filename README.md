@@ -1,6 +1,11 @@
 # GSD CLI
 
-**GSD CLI** (Get Shit Done) is a user-friendly command-line tool designed to simplify authentication and credential management for AWS services. It provides an intuitive interface for managing AWS profiles, authenticating via SSO, and accessing AWS services, so you can focus on getting things done.
+[![Go Version](https://img.shields.io/github/go-mod/go-version/aphexlog/gsd)](https://go.dev/)
+[![Release](https://img.shields.io/github/v/release/aphexlog/gsd)](https://github.com/aphexlog/gsd/releases/latest)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/aphexlog/gsd/release.yml)](https://github.com/aphexlog/gsd/actions)
+
+**GSD CLI** (Get Stuff Done) is a user-friendly command-line tool designed to simplify authentication and credential management for AWS services. It provides an intuitive interface for managing AWS profiles, authenticating via SSO, and accessing AWS services, so you can focus on getting things done.
 
 ---
 
@@ -19,17 +24,17 @@
 
 ### Option 1: Download Binary (Recommended)
 
-Visit the [Releases](https://github.com/yourusername/gsd/releases) page and download the latest version for your platform:
+Visit the [Releases](https://github.com/aphexlog/gsd/releases) page and download the latest version for your platform:
 
 - For macOS:
   ```bash
   # For Apple Silicon (M1/M2)
-  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Darwin_arm64.tar.gz
+  curl -LO https://github.com/aphexlog/gsd/releases/latest/download/gsd_Darwin_arm64.tar.gz
   tar xzf gsd_Darwin_arm64.tar.gz
   sudo mv gsd /usr/local/bin/
 
   # For Intel Macs
-  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Darwin_x86_64.tar.gz
+  curl -LO https://github.com/aphexlog/gsd/releases/latest/download/gsd_Darwin_x86_64.tar.gz
   tar xzf gsd_Darwin_x86_64.tar.gz
   sudo mv gsd /usr/local/bin/
   ```
@@ -37,12 +42,12 @@ Visit the [Releases](https://github.com/yourusername/gsd/releases) page and down
 - For Linux:
   ```bash
   # For AMD64
-  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Linux_x86_64.tar.gz
+  curl -LO https://github.com/aphexlog/gsd/releases/latest/download/gsd_Linux_x86_64.tar.gz
   tar xzf gsd_Linux_x86_64.tar.gz
   sudo mv gsd /usr/local/bin/
 
   # For ARM64
-  curl -LO https://github.com/yourusername/gsd/releases/latest/download/gsd_Linux_arm64.tar.gz
+  curl -LO https://github.com/aphexlog/gsd/releases/latest/download/gsd_Linux_arm64.tar.gz
   tar xzf gsd_Linux_arm64.tar.gz
   sudo mv gsd /usr/local/bin/
   ```
@@ -54,7 +59,7 @@ Visit the [Releases](https://github.com/yourusername/gsd/releases) page and down
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/aphexlog/gsd.git
    cd gsd
    ```
 
@@ -84,9 +89,9 @@ If no profile is specified, the default profile is used. This command automatica
 
 Switch to a different profile:
 ```bash
-gsd switch [profile]
+gsd switch
 ```
-If no profile is specified, you will be prompted to select one.
+You will be presented with an interactive menu to select your profile.
 
 ### Configuration Management
 
@@ -126,23 +131,21 @@ Interactive interface to:
 
 Open the AWS Management Console for the current account:
 ```bash
-gsd open console
+gsd open
 ```
+Select "Console (Main)" from the interactive menu.
 
 Open the AWS SSO login page:
 ```bash
-gsd open sso
+gsd open
 ```
+Select "SSO" from the interactive menu.
 
-Open a specific AWS service (e.g., Amplify):
+Open a specific AWS service:
 ```bash
-gsd open amplify
+gsd open
 ```
-
-Specify a profile when opening a service:
-```bash
-gsd open <service> --profile <profile-name>
-```
+Select the desired service from the interactive menu.
 
 ### Credential Validation
 
@@ -175,9 +178,9 @@ gsd whoami
 
 4. **Open AWS Console**:
    ```bash
-   gsd open console
+   gsd open
    ```
-   Quickly access the AWS Management Console for the current account.
+   Select "Console (Main)" to access the AWS Management Console.
 
 5. **Check Current Profile**:
    ```bash
@@ -200,6 +203,8 @@ gsd whoami
 ## Contributing
 
 Contributions are welcome! Please submit a pull request or open an issue to suggest improvements or report bugs.
+
+Created by [aphexlog](https://github.com/aphexlog)
 
 ---
 
